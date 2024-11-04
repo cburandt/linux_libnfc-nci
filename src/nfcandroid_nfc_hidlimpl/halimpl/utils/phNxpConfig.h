@@ -45,6 +45,7 @@ extern "C" {
 
 int GetNxpStrValue(const char* name, char* p_value, unsigned long len);
 int GetNxpNumValue(const char* name, void* p_value, unsigned long len);
+int loadIntValueOrDefault(const char* name, int default_value);
 int GetNxpByteArrayValue(const char* name, char* pValue, long bufflen,
                          long* len);
 void resetNxpConfig(void);
@@ -180,5 +181,22 @@ int isNxpConfigValid(unsigned long type);
 
 /* default configuration */
 #define default_storage_location "/data/vendor/nfc"
+
+/* runtime transport configuration */
+#define NAME_EXT_PIN_INT "PIN_INT"
+#define NAME_EXT_PIN_ENABLE "PIN_ENABLE"
+#define NAME_EXT_PIN_FWDNLD "PIN_FWDNLD"
+
+#define NAME_EXT_I2C_BUS "I2C_BUS"
+#define NAME_EXT_SPI_BUS "SPI_BUS"
+#define NAME_EXT_I2C_ADDRESS "I2C_ADDRESS"
+
+#define DEFAULT_PIN_INT 23
+#define DEFAULT_PIN_ENABLE 24
+#define DEFAULT_PIN_FWDNLD 25
+
+#define DEFAULT_I2C_ADDRESS 0x28
+#define DEFAULT_I2C_BUS "/dev/i2c-1"
+#define DEFAULT_SPI_BUS "/dev/spidev0.0"
 
 #endif

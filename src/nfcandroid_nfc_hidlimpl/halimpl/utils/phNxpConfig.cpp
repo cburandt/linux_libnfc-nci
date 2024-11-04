@@ -1046,6 +1046,28 @@ extern "C" int GetNxpNumValue(const char* name, void* pValue, unsigned long len)
 
 /*******************************************************************************
 **
+** Function:    loadIntValueOrDefault
+**
+** Description: Convenience function for getting a int value of a setting
+**
+** Parameters:
+**              name           - name of the config param to read
+**              default_value  - value to return if config param cannot be read
+**
+** Returns:     the retrieved value, or given default
+**
+*******************************************************************************/
+extern "C" int loadIntValueOrDefault(const char* name, int default_value) {
+  int value;
+  int isfound = GetNxpNumValue(name, &value, sizeof(&value));
+  if (isfound > 0) {
+    return value;
+  }
+  return default_value;
+}
+
+/*******************************************************************************
+**
 ** Function:    resetConfig
 **
 ** Description: reset settings array

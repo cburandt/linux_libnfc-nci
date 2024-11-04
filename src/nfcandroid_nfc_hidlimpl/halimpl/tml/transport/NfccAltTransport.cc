@@ -28,6 +28,7 @@
 #include <NfccI2cTransport.h>
 #include <NfccAltTransport.h>
 #include <phNfcStatus.h>
+#include <phNxpConfig.h>
 #include <phNxpLog.h>
 #include <string.h>
 #include "phNxpNciHal_utils.h"
@@ -441,12 +442,16 @@ void NfccAltTransport::wait4interrupt(void) {
    ****************************************************************************/
 int NfccAltTransport::ConfigurePin()
 {
+  int pin_int = loadIntValueOrDefault(NAME_EXT_PIN_INT, DEFAULT_PIN_INT);
+  int pin_ena = loadIntValueOrDefault(NAME_EXT_PIN_ENABLE, DEFAULT_PIN_ENABLE);
+  int pin_fwd = loadIntValueOrDefault(NAME_EXT_PIN_FWDNLD, DEFAULT_PIN_FWDNLD);
+
   // Assign IO pins
-  iInterruptFd = verifyPin(PIN_INT, 0, EDGE_RISING);
+  iInterruptFd = verifyPin(pin_int, 0, EDGE_RISING);
   if (iInterruptFd < 0) return (NFCSTATUS_INVALID_DEVICE);
-  iEnableFd = verifyPin(PIN_ENABLE, 1, EDGE_NONE);
+  iEnableFd = verifyPin(pin_ena, 1, EDGE_NONE);
   if (iEnableFd < 0) return (NFCSTATUS_INVALID_DEVICE);
-  iFwDnldFd = verifyPin(PIN_FWDNLD, 1, EDGE_NONE);
+  iFwDnldFd = verifyPin(pin_fwd, 1, EDGE_NONE);
   if (iFwDnldFd < 0) return (NFCSTATUS_INVALID_DEVICE);
   return NFCSTATUS_SUCCESS;
 }

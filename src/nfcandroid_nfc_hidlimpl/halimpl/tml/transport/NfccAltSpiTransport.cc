@@ -28,6 +28,7 @@
 
 #include <NfccAltSpiTransport.h>
 #include <phNfcStatus.h>
+#include <phNxpConfig.h>
 #include <phNxpLog.h>
 #include <string.h>
 #include "phNxpNciHal_utils.h"
@@ -67,12 +68,19 @@ NFCSTATUS NfccAltSpiTransport::OpenAndConfigure(pphTmlNfc_Config_t pConfig,
   status_value = ConfigurePin();
   if(status_value == -1)
     return NFCSTATUS_INVALID_DEVICE;
-  NXPLOG_TML_D("NFCHW - open SPI bus - %s\n", SPI_BUS);
+
+  const unsigned max_len = 260;
+  char spi_device_name[max_len] = {'\0'};
+  if (!GetNxpStrValue(NAME_EXT_SPI_BUS, spi_device_name, max_len-1)) {
+    strncpy(spi_device_name, DEFAULT_SPI_BUS, ((max_len-1) * sizeof(char)));
+  }
+
+  NXPLOG_TML_D("NFCHW - open SPI bus - %s\n", spi_device_name);
 
   // SPI bus
-  Fd = open(SPI_BUS, O_RDWR | O_NOCTTY);
+  Fd = open(spi_device_name, O_RDWR | O_NOCTTY);
   if (Fd < 0) {
-    NXPLOG_TML_E("Could not open SPI bus '%s' (%s)", SPI_BUS, strerror(errno));
+    NXPLOG_TML_E("Could not open SPI bus '%s' (%s)", spi_device_name, strerror(errno));
     Close(NULL);
     return (NFCSTATUS_INVALID_DEVICE);
   }
