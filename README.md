@@ -25,4 +25,5 @@ Modifications Notice
 The [original upstream source code](https://github.com/NXPNFCLinux/linux_libnfc-nci), released under the Apache 2.0 license and re-distributed here under the same license, has been modified as indicated below:
 
 - Applied 64bit patch
+- Added CMakeLists.txt
 
