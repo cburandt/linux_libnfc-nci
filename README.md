@@ -26,4 +26,5 @@ The [original upstream source code](https://github.com/NXPNFCLinux/linux_libnfc-
 
 - Applied 64bit patch
 - Added CMakeLists.txt
+- Remove hard-coded install paths from `./linux_libnfc-nci/src/libnfc-utils/src/ConfigPathProvider.cc`
 
