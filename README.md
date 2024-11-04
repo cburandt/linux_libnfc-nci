@@ -17,3 +17,12 @@ Possible problems, known errors and restrictions of R1.1:
 ---------------------------------------------------------
 - LLCP1.3 support requires OpenSSL Cryptography and SSL/TLS Toolkit (version 1.0.1j or later)
 - To install on 64bit OS, apply patch
+
+---
+
+Modifications Notice
+--------------------
+The [original upstream source code](https://github.com/NXPNFCLinux/linux_libnfc-nci), released under the Apache 2.0 license and re-distributed here under the same license, has been modified as indicated below:
+
+- Applied 64bit patch
+
