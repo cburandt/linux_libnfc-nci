@@ -4,7 +4,17 @@ cmake_minimum_required(VERSION 3.15)
 # from https://github.com/NXPNFCLinux/linux_libnfc-nci with the
 # 64bit_patch/ROOT_src.patch applied
 
-project(libnfcnfi)
+project(libnfcnci
+    VERSION 202411
+    DESCRIPTION "Modified NXP NFC NCI library"
+    LANGUAGES C CXX)
+
+find_package(everest-cmake 0.1 REQUIRED
+    PATHS ../everest-cmake
+)
+
+#option(INSTALL_NXP_CONFIG_FILE "Install default NXP-Config-File" OFF)
+option(NXPNFCNCI_INSTALL "Install the library (shared data might be installed anyway)" ${EVC_MAIN_PROJECT})
 
 find_package(Threads REQUIRED)
 find_library(LIBRT rt)
@@ -205,8 +215,10 @@ set (LIBNFC_NCI_INCLUDE_DIRS
     src/nfcandroid_nfc_hidlimpl/halimpl/log
 )
 
+set (LIBNFC_NCI_CONFIG_INSTALL_PATH "${CMAKE_INSTALL_PREFIX}/libnfc_config/" CACHE INTERNAL "Path to the libraries configuration files")
+
 set (COMPILE_DEFINITIONS
-    -DCONFIG_PATH="${CMAKE_INSTALL_PREFIX}/libnfc_config/"
+    -DCONFIG_PATH="${LIBNFC_NCI_CONFIG_INSTALL_PATH}"
     -DNFC_CFG_DEBUG=TRUE
     -DNFC_NXP_NOT_OPEN_INCLUDED=TRUE
     -DNXP_HW_SELF_TEST
@@ -239,7 +251,8 @@ target_compile_options(libnfc_nci
 
 target_include_directories(libnfc_nci
     PUBLIC
-        src/include
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
     PRIVATE
         ${LIBNFC_NCI_INCLUDE_DIRS}
 )
@@ -263,6 +276,28 @@ target_link_libraries(nfc_demo
         libnfc_nci
 )
 
+#
+# installation definition
+#
+if (NXPNFCNCI_INSTALL)
+    install(
+        TARGETS libnfc_nci
+        EXPORT libnfc_nci-targets
+    )
+
+    install(
+        DIRECTORY src/include/
+        TYPE INCLUDE
+    )
+
+    evc_setup_package(
+        NAME libnfc_nci
+        EXPORT libnfc_nci-targets
+        NAMESPACE libnfc_nci
+        ADDITIONAL_CONTENT
+            "PATH_VARS LIBNFC_NCI_CONFIG_INSTALL_PATH"
+    )
+endif()
 install(FILES ${LIBNFC_CONFIG_FILES}
     DESTINATION libnfc_config
 )
